@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping List</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Shopping List</h1>
+  <!-- Add Subcategory filter -->
+<div id="filters">
+  <label>Category:</label>
+  <select id="category-filter"><option value="">All</option></select>
+
+  <label>Subcategory:</label>
+  <select id="subcategory-filter"><option value="">All</option></select>
+</div>
+
+<ul id="item-list" style="list-style-type: none;"></ul>
+
+<h2>🛒 Selected Items</h2>
+<div id="selected-items"></div>
+
+<button id="share">Share List</button>
+
+  <ul id="item-list"></ul>
+
+  <button id="save">Save Prices</button>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: shopping-list-app
+    env: node
+    plan: free
+    buildCommand: ""
+    startCommand: "node backend/server.js"
+    envVars:
+      - key: NODE_VERSION
+        value: "18"
+      # If you use environment variables (e.g., for database connection strings),
+      # you'll need to add them here or in the Render dashboard.
+      # Example:
+      # - key: DATABASE_URL
+      #   value: your_database_connection_string
+    # region: frankfurt # Optional: uncomment and set to your preferred region
+    # healthCheckPath: / # Optional: uncomment and set to a health check endpoint
