@@ -69,6 +69,51 @@ app.get('/api/items', (req, res) => {
   });
 });
 
+// Add a new item
+app.post('/api/items', (req, res) => {
+  try {
+    const { name, category, quantity } = req.body;
+
+    if (!name || !category) {
+      console.error("POST /api/items - Bad Request: Name or category missing.", req.body);
+      return res.status(400).json({ error: 'Name and category are required.' });
+    }
+    const itemQuantity = quantity || 1; // Default quantity to 1 if not provided
+
+    const stmt = db.prepare("INSERT INTO items (name, category, quantity) VALUES (?, ?, ?)");
+    stmt.run(name, category, itemQuantity, function(err) {
+      if (err) {
+        console.error("DB Error inserting item in POST /api/items:", err.message);
+        return res.status(500).json({ error: `Database error: ${err.message}` });
+      }
+      // Return the newly created item, including its ID
+      const newItem = {
+        id: this.lastID,
+        name: name,
+        category: category,
+        quantity: itemQuantity,
+        price: 0 // Default price
+      };
+      console.log("POST /api/items - Successfully added item:", newItem);
+      res.status(201).json(newItem);
+    });
+    stmt.finalize(err => {
+      if (err) {
+        // This error is for finalize, if stmt.run had an error, it's handled above.
+        // It's less common for finalize to error if prepare/run were ok.
+        console.error("Error finalizing statement in POST /api/items:", err.message);
+        // Avoid sending another response if one was already sent by stmt.run's callback
+      }
+    });
+  } catch (e) {
+    console.error("Unexpected synchronous error in POST /api/items route:", e.message, e.stack);
+    // Ensure a response is sent if not already
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Server error processing request." });
+    }
+  }
+});
+
 // Update prices
 app.post('/api/update', (req, res) => {
   const updates = req.body;
